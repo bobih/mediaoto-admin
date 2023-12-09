@@ -15,6 +15,7 @@ use \App\Models\Paket;
 use \App\Models\Brands;
 use \App\Models\Province;
 use \App\Models\City;
+use \App\Models\Position;
 
 class UserController extends AdminController
 {
@@ -32,14 +33,15 @@ class UserController extends AdminController
      */
     protected function grid()
     {
-        
-       
-        
+
+
+
 
         $grid = new Grid(new User());
 
         $grid->column('id', __('Id'))->sortable();
         $grid->column('nama', __('Nama'))->ucfirst();
+        $grid->column('position.name', __('Position'))->ucfirst();
         $grid->column('email', __('Email'));
         $grid->column('phone', __('Phone'));
         $grid->column('quota', __('Quota'));
@@ -47,12 +49,12 @@ class UserController extends AdminController
 
 
         // Filter
-        $grid->filter(function($filter){
+        $grid->filter(function ($filter) {
             $filter->disableIdFilter();
             $filter->like('nama', 'nama');
         });
 
-       
+
         /*
         if (!Admin::user()->can('delete-content')) {
             $actions->disableDelete();
@@ -65,17 +67,17 @@ class UserController extends AdminController
 
         $grid->actions(function ($actions) {
             //if (Admin::user()->isAdministrator()) {
-                $actions->disableDelete();
-           // }
+            $actions->disableDelete();
+            // }
 
             //$actions->disableDelete();
-           // $actions->disableEdit();
-           // $actions->disableView();
+            // $actions->disableEdit();
+            // $actions->disableView();
         });
 
 
         return $grid;
-	
+
     }
 
     /**
@@ -88,49 +90,68 @@ class UserController extends AdminController
     {
         $show = new Show(User::findOrFail($id));
 
-       // $show->field('id', __('Id'));
+        // $show->field('id', __('Id'));
         $show->field('nama', __('Nama'));
         $show->field('email', __('Email'));
         $show->field('phone', __('Phone'));
+        $show->field('position.name', __('Posisi'));
         $show->field('quota', __('Quota'));
         $show->field('alamat', __('Alamat'));
         $show->field('province.name', __('Provinsi'));
-        $show->field('city.name', __('Kota'))->as(function($city){
+        $show->field('city.name', __('Kota'))->as(function ($city) {
             return ucwords(strtolower($city));
         });
         $show->field('brands.brand', __('Brand'));
-	
+        $show->field('created_at', __('Created at'));
+
+
+        $show->listposition('Staff Info', function ($listUser) {
+            $listUser->setResource('/admin/list-positions');
+            $listUser->column('user.nama', __('Nama'));
+            $listUser->column('user.phone', __('Phone'));
+            $listUser->column('user.email', __('Email'));
+
+            $listUser->actions(function ($actions) {
+                $actions->disableDelete();
+                //$actions->disableDelete();
+                $actions->disableEdit();
+                //$actions->disableView();
+
+            });
+            $listUser->disableCreateButton();
+
+        });
 
         $show->prospek('Prospek information', function ($prospek) {
-                $prospek->setResource('/admin/prospeks');
-                $prospek->column('lead.name', __('Nama'));
-                $prospek->column('lead.model', __('Model'));
-                $prospek->column('lead.variant', __('Variant'));
-                $prospek->note();
+            $prospek->setResource('/admin/prospeks');
+            $prospek->column('lead.name', __('Nama'));
+            $prospek->column('lead.model', __('Model'));
+            $prospek->column('lead.variant', __('Variant'));
+            $prospek->note();
 
-                $prospek->actions(function ($actions) {
-                    $actions->disableDelete();
-                    //$actions->disableDelete();
-                    $actions->disableEdit();
-                    //$actions->disableView();
-                   
-                });
-                $prospek->disableCreateButton();
+            $prospek->actions(function ($actions) {
+                $actions->disableDelete();
+                $actions->disableEdit();
+                //$actions->disableView();
+
+            });
+            $prospek->disableCreateButton();
 
         });
 
 
-        $show->field('created_at', __('Created at'));
 
+
+        //
         $show->panel()->tools(function ($tools) {
             //$tools->disableEdit();
             //$tools->disableList();
             $tools->disableDelete();
         });
 
-       
 
-	//dd($show);
+
+        //dd($show);
 
         return $show;
     }
@@ -147,32 +168,33 @@ class UserController extends AdminController
         $form->text('nama', __('Nama'))->required();
         $form->email('email', __('Email'))->required();
         $form->text('phone', __('Phone'));
-       	$form->text('quota', __('Quota'))->default(100)->required();
-       	$form->select('brand_id', __('Brand'))->options(Brands::all()->pluck('brand','id'))->required();
-	    $form->textarea('alamat', __('Alamat'));
+        $form->select('position_id', __('Posisi'))->options(Position::all()->pluck('name', 'id'))->required();
+        $form->text('quota', __('Quota'))->default(100)->required();
+        $form->select('brand_id', __('Brand'))->options(Brands::all()->pluck('brand', 'id'))->required();
+        $form->textarea('alamat', __('Alamat'));
         $form->image('image', __('Avatar'));
         $form->image('ktp', __('KTP'));
         $form->image('npwp', __('NPWP'));
 
         $form->select('province_id', __('Provinsi'))
             ->options(Province::all()
-            ->pluck('name','id'))
+                ->pluck('name', 'id'))
             ->load('city_id', '/api/city');
         $form->select('city_id', __('Kota'))->options(City::all()
-            ->pluck('name','id'));
+            ->pluck('name', 'id'));
 
 
         $form->tools(function (Form\Tools $tools) {
 
             // Disable `List` btn.
             // $tools->disableList();
-        
+
             // Disable `Delete` btn.
             $tools->disableDelete();
-        
+
             // Disable `Veiw` btn.
             // $tools->disableView();
-        
+
             // Add a button, the argument can be a string, or an instance of the object that implements the Renderable or Htmlable interface
             // $tools->add('<a class="btn btn-sm btn-danger"><i class="fa fa-trash"></i>&nbsp;&nbsp;delete</a>');
         });

@@ -11,22 +11,22 @@ use Illuminate\Database\Eloquent\Model;
 class Brands extends Model
 {
 
- use HasFactory;
-        //use ModelTree;
+    use HasFactory;
+    //use ModelTree;
 
 
-         protected $table = 'brands';
+    protected $table = 'brands';
 
 
-	public function user()
+    public function user()
     {
-        return $this->belongsTo(User::class,'brand_id');
+        return $this->belongsTo(User::class, 'brand_id');
     }
 
 
-        public function showroom()
+    public function showroom()
     {
-        return $this->belongsTo(Showroom::class,'brand_id');
+        return $this->belongsTo(Showroom::class, 'brand_id');
     }
 
 

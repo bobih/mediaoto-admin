@@ -37,6 +37,8 @@ Route::group(['middleware' => [\App\Http\Middleware\JwtMiddleware::class]], func
 
     //Prospek
     Route::post("summary",  [ProspekController::class, 'getSummary']);
-   
-   
+    Route::post("list",  [ProspekController::class, 'getList']);
+    Route::post("setfavorite", [ProspekController::class,'setFavorite']);
+
+
 });

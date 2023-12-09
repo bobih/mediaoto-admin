@@ -45,27 +45,41 @@ class User extends Authenticatable
     ];
 
 
-	public function brands()
-  {  
-        return $this->hasOne(Brands::class,'id','brand_id');
+    public function brands()
+    {
+        return $this->hasOne(Brands::class, 'id', 'brand_id');
     }
 
-       public function prospek()
-  {
-        return $this->hasMany(Prospek::class,'userid','id');
-    }
-
-
-        public function city()
-  {
-        return $this->hasOne(City::class,'id','city_id');
+    public function prospek()
+    {
+        return $this->hasMany(Prospek::class, 'userid', 'id');
     }
 
 
-        public function province()
-  {
-        return $this->hasOne(Province::class,'id','province_id');
+    public function city()
+    {
+        return $this->hasOne(City::class, 'id', 'city_id');
     }
+
+    public function position()
+    {
+        return $this->hasOne(Position::class, 'id', 'position_id');
+    }
+
+
+
+    public function province()
+    {
+        return $this->hasOne(Province::class, 'id', 'province_id');
+    }
+
+    public function listposition()
+    {
+        return $this->hasMany(ListPosition::class, 'parent_id');
+    }
+
+
+
 
 
 }

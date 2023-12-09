@@ -23,5 +23,7 @@ Route::group([
 	$router->resource('cities', CityController::class);
 
 	$router->resource('leads', LeadController::class);
+    $router->resource('positions', PositionController::class);
+    $router->resource('list-positions', ListPositionController::class);
 
 });
