@@ -87,13 +87,14 @@ class ProspekController extends Controller
                 "today" => $viewed_today->total
             ],
 
-
+            /*
             [
                 "id" => 4,
                 "title" => "Telepon Kembali",
                 "total" => $reminder,
                 "today" => $reminder_today,
             ],
+
             [
                 "id" => 5,
                 "title" => "Tes Jalan",
@@ -101,13 +102,14 @@ class ProspekController extends Controller
                 "today" => 0
             ],
 
+
             [
                 "id" => 6,
                 "title" => "Tidak Ada Langkah yang Ditentukan",
                 "total" => 1,
                 "today" => 0
             ],
-
+            */
             [
                 "id" => 7,
                 "title" => "Pembaruan",
@@ -115,6 +117,15 @@ class ProspekController extends Controller
                 "today" => 0
             ]
         ];
+
+        $data = json_decode(json_encode($data), true);
+
+        /*
+        array_walk_recursive($data, function (&$item) {
+            $item = strval($item);
+        });
+        */
+       // $data = json_encode($data);
 
         return response()->json($data, 200);
     }
@@ -190,10 +201,18 @@ class ProspekController extends Controller
             $x++;
         }
 
+
         array_walk_recursive($data, function (&$item) {
             $item = strval($item);
         });
-        return response()->json($data, 200);
+        $data = json_encode($data);
+
+      return response($data,200)->withHeaders([
+        'Content-Type' => 'text/html; charset=UTF-8',
+        'X-Header-One' => 'Header Value',
+        'X-Header-Two' => 'Header Value',
+    ]);
+        //return response()->json($data, 200)->header('Content-Type', 'text/html; charset=UTF-8');
 
     }
 
@@ -335,9 +354,58 @@ class ProspekController extends Controller
             ->update(['view' => 1]);
 
         $result = DB::table('prospek')
-            ->select('leads.*', 'prospek.view', 'prospek.created_at as regdate', 'prospek.favorite', 'prospek.id as pid')
+            ->select('leads.*', 'prospek.view', 'prospek.created_at as regdate', 'prospek.favorite', 'prospek.note', 'prospek.id as pid')
             ->leftJoin('leads', 'leads.id', '=', 'prospek.leadsid')
             ->where('prospek.id', '=', $leadid);
+
+        $return = json_decode($result->get());
+
+        $data = [];
+        $x = 0;
+        foreach ($return as $rows) {
+            $data[$x]['id'] = $rows->pid;
+            $data[$x]['nama'] = trim( ucwords($rows->name));
+            $data[$x]['nickname'] = '';
+            $data[$x]['email'] = '';
+            $data[$x]['mobile'] =  $rows->phone;
+            $data[$x]['car'] = $rows->model . " " . html_entity_decode($rows->variant);
+            $data[$x]['lokasi'] = $rows->city;
+            $data[$x]['angsuran'] = "0";
+            $data[$x]['tenor'] = "0";
+            $data[$x]['tdp'] = "0";
+            $data[$x]['favorite'] = $rows->favorite;
+            $data[$x]['view'] = $rows->view;
+            $data[$x]['regdate'] =  $rows->regdate;
+            $data[$x]['lastview'] =  "2023-11-17 10:10:10";
+            $data[$x]['catatan'] = $rows->note;
+            $x++;
+        }
+
+        $reminder = DB::table('reminder')
+            ->select('*')
+            ->where('leadsid', '=', $leadid)
+            ->where('userid', '=', $userid)
+            ->orderBy('tanggal', 'desc');
+
+            $data[0]['reminder'] = $reminder->get();
+        $data = json_decode(json_encode($data), true);
+        array_walk_recursive($data, function (&$item) {
+            $item = strval($item);
+        });
+        return response()->json($data, 200);
+    }
+
+    public function searchLeads(Request $request)
+    {
+
+        $search = $request['search'];
+        $userid = $request['userid'];
+
+        $result = DB::table('prospek')
+            ->select('leads.*', 'prospek.view', 'prospek.created_at as regdate', 'prospek.favorite', 'prospek.id as pid')
+            ->leftJoin('leads', 'leads.id', '=', 'prospek.leadsid')
+            ->where('prospek.userid', '=', $userid)
+            ->where('leads.name', 'like', "%" . $search . "%");
 
         $return = json_decode($result->get());
 
@@ -360,18 +428,11 @@ class ProspekController extends Controller
             $x++;
         }
 
-        $reminder = DB::table('reminder')
-            ->select('*')
-            ->where('leadsid', '=', $leadid)
-            ->where('userid', '=', $userid)
-            ->orderBy('tanggal', 'desc');
-
-        $data[0]['reminder'] = json_decode($reminder->get());
-
         array_walk_recursive($data, function (&$item) {
             $item = strval($item);
         });
         return response()->json($data, 200);
+
     }
 
 

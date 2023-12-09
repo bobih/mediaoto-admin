@@ -37,13 +37,8 @@ class UserController extends Controller
             $data[$x]['ktp'] = $rows->ktp;
             $data[$x]['npwp'] = $rows->npwp;
             $data[$x]['image'] = $rows->image;
-
-
             $data[$x]['fcmtoken'] = $rows->fcmtoken;
-
             $data[$x]['register'] = $rows->created_at;
-
-
             $key = getenv('JWT_SECRET');
             $iat = time(); // current timestamp value
             $exp = $iat + 36000;
@@ -66,7 +61,8 @@ class UserController extends Controller
         }
 
         array_walk_recursive($data, function (&$item) {
-            $item = strval($item); });
+            $item = strval($item);
+        });
         return response()->json($data, 200);
     }
 
@@ -107,20 +103,20 @@ class UserController extends Controller
         }
     }
 
-    public function updateUserInfo()
+    public function updateUserInfo(Request $request)
     {
-        $userid = trim($this->request->getVar('userid', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-        $nama = trim($this->request->getVar('nama', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-        $phone = trim($this->request->getVar('phone', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-        $alamat = trim($this->request->getVar('alamat', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $affected = DB::table('users')
+            ->where('id', $request['userid'])
+            ->update([
+                'nama' => $request['nama'],
+                'phone' => $request['phone'],
+                'alamat' => $request['alamat']
+            ]);
 
-        $db = db_connect();
-        $sql = "UPDATE `users` SET `nama`='" . $nama . "', `phone`='" . $phone . "', `alamat`='" . $alamat . "' WHERE `users`.`id` = '" . $userid . "';";
-        if ($db->query($sql)) {
-            $db->close();
-            return $this->respond(['message' => 'Update Successfully'], 200);
+        if ($affected == 1) {
+            return response()->json(["message" => "Data Updated"], 200);
         } else {
-            return $this->respond(['error' => 'Update Faled'], 401);
+            return response()->json(["Error" => "Update Failed"], 401);
         }
     }
 

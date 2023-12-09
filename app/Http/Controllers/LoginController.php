@@ -27,17 +27,17 @@ class LoginController extends Controller
         }
 
         $email = $request['email'];
-        $password = $request['password'];        
+        $password = $request['password'];
         $user = User::where('email', $email)->first();
         $pwd_verify = password_verify($password, $user['password']);
 
         if($pwd_verify == false){
             return response()->json(['error' => "Password Error"], 401);
-        } 
-        
+        }
+
         $key = getenv('JWT_SECRET');
         $iat = time(); // current timestamp value
-        $exp = $iat + 360000000;
+        $exp = $iat + 36000;
         $payload = array(
             "iss" => "mediaoto",
             "aud" => "mobile",
@@ -47,16 +47,21 @@ class LoginController extends Controller
             "email" => $request['email'],
         );
         $token = JWT::encode($payload, $key, 'HS256');
-        return response()->json([
-            'success' => true,
-            'token' => $token,
-        ]);
+
+        $data = [ 'success' => true,
+        'id'    => $user->id,
+        'token' => $token];
+        array_walk_recursive($data, function (&$item) {
+            $item = strval($item);
+        });
+
+        return response()->json($data, 200);
     }
 
-    public function refreshToken()
+    public function refreshToken(Request $request)
     {
-        $email = $this->request->getVar('email');
-          
+        $email = $request['email'];
+
         $key = getenv('JWT_SECRET');
         $iat = time(); // current timestamp value
         $exp = $iat + 3600;
@@ -76,6 +81,6 @@ class LoginController extends Controller
             'message' => 'Refresh Succesful',
             'token' => $token
         ];
-        return $this->respond($response, 200); 
+        return $this->respond($response, 200);
     }
 }
