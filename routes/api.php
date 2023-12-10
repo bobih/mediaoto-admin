@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CityController;
@@ -26,12 +27,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('city',[CityController::class, 'getCity']);
 Route::post('login', [LoginController::class, 'login']);
 
+Route::post('ads', [AppController::class, 'getAds']);
+
 Route::group(['middleware' => [\App\Http\Middleware\JwtMiddleware::class]], function() {
 
 
 
 
 });
+
+
+Route::post("updateuser", [LoginController::class, 'updateUser']);
+Route::post("refreshtoken", [LoginController::class, 'refreshToken']);
+
 
 
 Route::post("changepass", [UserController::class, 'changePassword']);
@@ -55,4 +63,7 @@ Route::post("walog", [ProspekController::class,'waLog']);
 Route::post("setlost", [ProspekController::class,'setLost']);
 Route::post("reminder", [ProspekController::class,'setReminder']);
 Route::post("search", [ProspekController::class,'searchLeads']);
+
+
+
 

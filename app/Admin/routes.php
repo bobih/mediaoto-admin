@@ -1,6 +1,23 @@
 <?php
 
 use Illuminate\Routing\Router;
+use \App\Admin\Controllers\ArtcleController;
+use \App\Admin\Controllers\ProspekController;
+use \App\Admin\Controllers\UserController;
+use \App\Admin\Controllers\PaketController;
+use \App\Admin\Controllers\BrandController;
+use \App\Admin\Controllers\ShowroomController;
+use \App\Admin\Controllers\ProvinceController;
+use \App\Admin\Controllers\CityController;
+use \App\Admin\Controllers\LeadController;
+use \App\Admin\Controllers\PositionController;
+use \App\Admin\Controllers\ListPositionController;
+use \App\Admin\Controllers\ListCallController;
+use \App\Admin\Controllers\ListWaController;
+use \App\Admin\Controllers\ListAdsController;
+
+
+
 
 Admin::routes();
 
@@ -25,5 +42,12 @@ Route::group([
 	$router->resource('leads', LeadController::class);
     $router->resource('positions', PositionController::class);
     $router->resource('list-positions', ListPositionController::class);
+    $router->resource('list-calls', ListCallController::class);
+    $router->resource('list-was', ListWaController::class);
+
+    $router->resource('list-ads', ListAdsController::class);
+
+
+
 
 });

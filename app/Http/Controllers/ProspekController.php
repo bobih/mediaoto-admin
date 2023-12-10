@@ -285,7 +285,7 @@ class ProspekController extends Controller
         DB::table('list_call')->insert([
             'leadsid' => $request['leadid'],
             'userid' => $request['userid'],
-            'tanggal' => 'CURRENT_TIMESTAMP()'
+            'tanggal' => date("Y-m-d H:i:s")
         ]);
 
         return response()->json(["message" => "Data Updated"], 200);
@@ -297,7 +297,7 @@ class ProspekController extends Controller
         DB::table('list_wa')->insert([
             'leadsid' => $request['leadid'],
             'userid' => $request['userid'],
-            'tanggal' => 'CURRENT_TIMESTAMP()'
+            'tanggal' => date("Y-m-d H:i:s")
         ]);
 
         return response()->json(["message" => "Data Updated"], 200);

@@ -60,7 +60,14 @@ class LoginController extends Controller
 
     public function refreshToken(Request $request)
     {
+
         $email = $request['email'];
+
+        $user = User::where('email', $email)->first();
+
+        if($user == null){
+            return response()->json(["Error" => "User Not Found"], 200);
+        }
 
         $key = getenv('JWT_SECRET');
         $iat = time(); // current timestamp value
@@ -81,6 +88,7 @@ class LoginController extends Controller
             'message' => 'Refresh Succesful',
             'token' => $token
         ];
-        return $this->respond($response, 200);
+
+        return response()->json($response, 200);
     }
 }

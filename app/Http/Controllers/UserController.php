@@ -96,7 +96,8 @@ class UserController extends Controller
         $file = $request->file('file');
 
         $fileName = time() . '.' . $file->extension();
-        $request->file->storeAs('public/images', $fileName);
+        $saveFile = $request->file->storeAs('public/images', $fileName);
+
 
         $user = User::where('id', $userid)->first();
 
@@ -108,26 +109,6 @@ class UserController extends Controller
         return response()->json("OK", 200);
 
 
-
-
-        //if(true){
-        /*
-        if ($file->move('/DATA/mediaoto/public_html/images', $newName)) {
-            $db = db_connect();
-            $sql = "UPDATE `users` SET `nama`='" . $nama . "', `phone`='" . $phone . "', `alamat`='" . $alamat . "', `image` = '" . $newName . "' WHERE `users`.`id` = '" . $userid . "';";
-            $query = $db->query($sql);
-            $db->close();
-            // remove old filename
-            $oldfile = '/DATA/mediaoto/public_html/images/' . basename(trim($this->request->getVar('oldfilename')));
-            //delete_files($path);
-            if (file_exists($oldfile)) {
-                unlink($oldfile);
-            }
-        */
-         //   return $this->respond(['message' => 'Update Successfully'], 200);
-        //} else {
-        //    return $this->respond(['error' => 'Update Faled'], 401);
-        //}
     }
 
     public function updateUserInfo(Request $request)

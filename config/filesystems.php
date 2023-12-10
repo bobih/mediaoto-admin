@@ -94,6 +94,7 @@ return [
 
     'links' => [
         //public_path('storage') => storage_path('app/public'),
+        // create symlink from storage to public
         public_path('images') => storage_path('app/public/images'),
     ],
 
