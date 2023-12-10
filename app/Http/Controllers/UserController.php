@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use \Firebase\JWT\JWT;
+use App\Models\User;
 use DB;
 
 class UserController extends Controller
@@ -67,24 +69,49 @@ class UserController extends Controller
     }
 
 
-    public function updateImage()
+    public function updateImage(Request $request)
     {
 
+        //return response()->json($request->all(), 200);
 
-        $userid = trim($this->request->getVar('userid', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-        $nama = trim($this->request->getVar('nama', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-        $phone = trim($this->request->getVar('phone', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-        $alamat = trim($this->request->getVar('alamat', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
-
-        $file = $this->request->getFile('file');
-
-        if (!$file->isValid()) {
-            return $this->respond(['error' => 'Update Faled'], 401);
-        }
-        ;
+        /*
+        $request->validate([
+            'userid' => 'required',
+            'nama' => '',
+            'phone' => '',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+        */
 
 
-        $newName = $file->getRandomName();
+
+        $userid = trim($request['userid'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $nama = trim($request['nama'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $oldfilename = trim($request['oldfilename'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $phone = trim($request['phone'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $alamat = trim($request['alamat'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+
+
+        $file = $request->file('file');
+
+        $fileName = time() . '.' . $file->extension();
+        $request->file->storeAs('public/images', $fileName);
+
+        $user = User::where('id', $userid)->first();
+
+        $user->nama = $request->input('nama');
+        $user->phone = trim($request->input('phone'));
+        $user->image = $fileName;
+
+        $user->save();
+        return response()->json("OK", 200);
+
+
+
+
+        //if(true){
+        /*
         if ($file->move('/DATA/mediaoto/public_html/images', $newName)) {
             $db = db_connect();
             $sql = "UPDATE `users` SET `nama`='" . $nama . "', `phone`='" . $phone . "', `alamat`='" . $alamat . "', `image` = '" . $newName . "' WHERE `users`.`id` = '" . $userid . "';";
@@ -96,11 +123,11 @@ class UserController extends Controller
             if (file_exists($oldfile)) {
                 unlink($oldfile);
             }
-
-            return $this->respond(['message' => 'Update Successfully'], 200);
-        } else {
-            return $this->respond(['error' => 'Update Faled'], 401);
-        }
+        */
+         //   return $this->respond(['message' => 'Update Successfully'], 200);
+        //} else {
+        //    return $this->respond(['error' => 'Update Faled'], 401);
+        //}
     }
 
     public function updateUserInfo(Request $request)

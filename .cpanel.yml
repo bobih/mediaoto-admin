@@ -1,0 +1,5 @@
+#### THIS ALLOWS US TO DEPLOY THE SITE FROM A GIT REPO ######
+---
+deployment:
+  tasks:
+    - /bin/ln -s /DATA/mediaoto/mediaoto-admin/public/uploads /DATA/mediaoto/public_html/uploads
