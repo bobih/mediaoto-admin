@@ -3,37 +3,31 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ListAds;
 
 class AppController extends Controller
 {
-    public function getAds() {
+    public function getAds(Request $request)
+    {
 
-        $data = [
-            [
-                "id" => 1,
-                "title" => "ads1",
-                "image" => "",
-                "url" => ""
-            ],
-            [
-                "id" => 2,
-                "title" => "ads2",
-                "image" => "",
-                "url" => ""
-            ],
-            [
-                "id" => 3,
-                "title" => "ads3",
-                "image" => "",
-                "url" => ""
-            ]
-        ];
+        $ads = ListAds::where('active', 1)->get();
 
-        //$data = [];
 
-        $response = json_encode($data,JSON_NUMERIC_CHECK);
+        $data = [];
+        $x = 0;
+        foreach ($ads as $rows) {
 
-        return $this->respond($response, 200);
-
+            $data[$x]['id'] = $rows->id;
+            $data[$x]['title'] = $rows->title;
+            $data[$x]['image'] = $rows->image;
+            $data[$x]['url'] = $rows->url;
+            $x++;
+        }
+        array_walk_recursive($data, function (&$item) {
+            $item = strval($item);
+        });
+        // Change number to integed
+        $data = json_decode(json_encode($data, JSON_NUMERIC_CHECK));
+        return response()->json($data, 200);
     }
 }

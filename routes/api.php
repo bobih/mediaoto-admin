@@ -8,6 +8,7 @@ use App\Http\Controllers\ProspekController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,14 +33,14 @@ Route::post('ads', [AppController::class, 'getAds']);
 Route::group(['middleware' => [\App\Http\Middleware\JwtMiddleware::class]], function() {
 
 
-
-
 });
 
 
 Route::post("updateuser", [LoginController::class, 'updateUser']);
 Route::post("refreshtoken", [LoginController::class, 'refreshToken']);
 
+
+Route::post("ads", [AppController::class, 'getAds']);
 
 
 Route::post("changepass", [UserController::class, 'changePassword']);

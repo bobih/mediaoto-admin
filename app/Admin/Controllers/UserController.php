@@ -94,6 +94,7 @@ class UserController extends AdminController
 
 
         $show->field("image","")->image($base_url = '', $width = 200, $height = 200);
+
         $show->field('nama', __('Nama'));
         $show->field('email', __('Email'));
         $show->field('phone', __('Phone'));

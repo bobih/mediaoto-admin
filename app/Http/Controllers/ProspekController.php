@@ -15,7 +15,8 @@ class ProspekController extends Controller
         //Summary Total
         $total = DB::table('prospek')
             ->select(DB::raw('COUNT(id) as total'))
-            ->where('userid', $userid)->first();
+            ->where('userid', $userid)
+            ->where('lost', 0)->first();
 
         //Summary Total Har Ini
         $total_today = DB::table('prospek')
@@ -50,6 +51,20 @@ class ProspekController extends Controller
             ->where('userid', $userid)->first();
 
 
+        // Lost
+        $Lost = DB::table('prospek')
+        ->select(DB::raw('COUNT(id) as total'))
+        ->where('userid', $userid)
+        ->where('lost','>', 0)->first();
+
+        $lost_today = DB::table('prospek')
+            ->select(DB::raw('COUNT(id) as total'))
+            ->where(DB::raw('DATE(`created_at`) = CURRENT_DATE()'))
+            ->where('userid', $userid)
+            ->where('lost','>', 0)->first();
+
+
+        //CAll
         $reminder = DB::table('reminder')
             ->select(DB::raw('count(reminder.leadsid) as total'))
             ->leftJoin('prospek', 'prospek.id', '=', 'reminder.leadsid')
@@ -87,6 +102,13 @@ class ProspekController extends Controller
                 "today" => $viewed_today->total
             ],
 
+            [
+                "id" => 5,
+                "title" => "Lost",
+                "total" => $Lost->total,
+                "today" => $lost_today->total
+            ],
+
             /*
             [
                 "id" => 4,
@@ -109,13 +131,15 @@ class ProspekController extends Controller
                 "total" => 1,
                 "today" => 0
             ],
-            */
+
+
             [
                 "id" => 7,
                 "title" => "Pembaruan",
                 "total" => 0,
                 "today" => 0
             ]
+            */
         ];
 
         $data = json_decode(json_encode($data), true);
