@@ -6,9 +6,9 @@ use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
 use OpenAdmin\Admin\Show;
-use \App\Models\Paket;
+use \App\Models\ListPaket;
 
-class PaketController extends AdminController
+class ListPaketController extends AdminController
 {
     /**
      * Title for current resource.
@@ -24,10 +24,10 @@ class PaketController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Paket());
+        $grid = new Grid(new ListPaket());
 
         //$grid->column('id', __('Id'));
-        $grid->column('paketid', __('Paketid'));
+        $grid->column('paket_id', __('Paketid'));
         $grid->column('quota', __('Quota'));
         $grid->column('desc', __('Keterangan'));
         $grid->column('harga', __('Harga'));
@@ -45,10 +45,10 @@ class PaketController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Paket::findOrFail($id));
+        $show = new Show(ListPaket::findOrFail($id));
 
         //$show->field('id', __('Id'));
-        $show->field('paketid', __('Paketid'));
+        $show->field('paket_id', __('Paketid'));
         $show->field('quota', __('Quota'));
         $show->field('desc', __('Keterangan'));
         $show->field('harga', __('Harga'));
@@ -65,9 +65,9 @@ class PaketController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Paket());
+        $form = new Form(new ListPaket());
 
-        $form->number('paketid', __('Paketid'));
+        $form->number('paket_id', __('Paketid'));
         $form->number('quota', __('Quota'));
         $form->text('desc', __('Keterangan'));
         $form->number('harga', __('Harga'));

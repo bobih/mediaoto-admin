@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\DeliveryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CityController;
@@ -29,6 +30,9 @@ Route::post('city',[CityController::class, 'getCity']);
 Route::post('login', [LoginController::class, 'login']);
 
 Route::post('ads', [AppController::class, 'getAds']);
+
+Route::get("delivery",[DeliveryController::class,'test']);
+
 
 Route::group(['middleware' => [\App\Http\Middleware\JwtMiddleware::class]], function() {
 

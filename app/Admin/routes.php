@@ -4,7 +4,7 @@ use Illuminate\Routing\Router;
 use \App\Admin\Controllers\ArtcleController;
 use \App\Admin\Controllers\ProspekController;
 use \App\Admin\Controllers\UserController;
-use \App\Admin\Controllers\PaketController;
+use \App\Admin\Controllers\ListPaketController;
 use \App\Admin\Controllers\BrandController;
 use \App\Admin\Controllers\ShowroomController;
 use \App\Admin\Controllers\ProvinceController;
@@ -15,6 +15,8 @@ use \App\Admin\Controllers\ListPositionController;
 use \App\Admin\Controllers\ListCallController;
 use \App\Admin\Controllers\ListWaController;
 use \App\Admin\Controllers\ListAdsController;
+use \App\Admin\Controllers\ListPushController;
+use \App\Admin\Controllers\InvoiceController;
 
 
 
@@ -33,7 +35,7 @@ Route::group([
 	$router->resource('articles', ArtcleController::class);
 	$router->resource('prospeks', ProspekController::class);
 	$router->resource('users', UserController::class);
-	$router->resource('pakets', PaketController::class);
+	$router->resource('pakets', ListPaketController::class);
 	$router->resource('brands', BrandController::class);
 	$router->resource('showrooms', ShowroomController::class);
 	$router->resource('provinces', ProvinceController::class);
@@ -46,8 +48,9 @@ Route::group([
     $router->resource('list-was', ListWaController::class);
 
     $router->resource('list-ads', ListAdsController::class);
+    $router->resource('list-pushes', ListPushController::class);
 
-
+    $router->resource('invoices', InvoiceController::class);
 
 
 });

@@ -19,8 +19,6 @@ class UserController extends Controller
             return $this->respond(['error' => 'Invalid User'], 401);
         }
 
-        //$userid = 25;
-        $sql = "SELECT * from users WHERE id='" . $userid . "' LIMIT 1";
         $query = DB::table('users')->where('id', $userid)->get();
 
         $data = [];

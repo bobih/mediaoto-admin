@@ -53,16 +53,16 @@ class ProspekController extends AdminController
         $show = new Show(Prospek::findOrFail($id));
 
         //$show->field('id', __('Id'));
-        //$show->field('userid', __('Userid'));
-        //$show->field('leadsid', __('Leadsid'));
+        $show->field('userid', __('Userid'));
+        $show->field('leadsid', __('Leadsid'));
         $show->field('lead.name', __('Nama'));
         $show->field('lead.phone', __('Phone'));
         $show->field('lead.model', __('Model'));
         $show->field('lead.variant', __('Variant'));
         $show->field('view', __('View'));
         $show->field('favorite', __('Favorite'));
-        $show->field('note', __('Catatan'));
-        $show->field('lost', __('Lost'));
+        $show->field('note', __('Catatan'))->sortable();
+        $show->field('lost', __('Lost'))->sortable();
         //$show->field('created_at', __('Created at'));
         //$show->field('updated_at', __('Updated at'));
 

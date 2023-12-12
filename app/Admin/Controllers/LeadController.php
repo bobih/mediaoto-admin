@@ -30,12 +30,19 @@ class LeadController extends AdminController
         $grid->column('create', __('Create'));
         $grid->column('name', __('Name'));
         $grid->column('phone', __('Phone'));
-        $grid->column('brand', __('Brand'));
+        $grid->column('brands.brand', __('Brand'));
+       $grid->column('model', __('Model'));
         $grid->column('variant', __('Variant'));
-        $grid->column('city', __('City'));
+         $grid->column('city', __('City'));
         $grid->column('lokasi', __('Lokasi'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
+
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->like('brand', 'Brand ID');
+            //$filter->like('brands.brand', 'Brand');
+        });
 
         return $grid;
     }
@@ -54,12 +61,14 @@ class LeadController extends AdminController
         $show->field('create', __('Create'));
         $show->field('name', __('Name'));
         $show->field('phone', __('Phone'));
-        $show->field('brand', __('Brand'));
+        $show->field('brands.brand', __('Brand'));
         $show->field('variant', __('Variant'));
         $show->field('city', __('City'));
         $show->field('lokasi', __('Lokasi'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
+
+
 
         return $show;
     }

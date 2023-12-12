@@ -8,11 +8,11 @@ use Encore\Admin\Layout\Content;
 //use Encore\Admin\Traits\ModelTree;
 
 
-class Paket extends Model
+class ListPaket extends Model
 {
    	use HasFactory;
 	//use ModelTree;
 
 
-	 protected $table = 'paket';
+	 protected $table = 'list_paket';
 }

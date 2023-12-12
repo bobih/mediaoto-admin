@@ -23,6 +23,10 @@ class Brands extends Model
         return $this->belongsTo(User::class, 'brand_id');
     }
 
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class, 'brand_id');
+    }
 
     public function showroom()
     {

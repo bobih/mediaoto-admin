@@ -10,9 +10,12 @@ class Lead extends Model
 
  public function prospek()
     {
-        return $this->belongsTo(Prospeks::class,'leadsid');
+        return $this->belongsTo(Prospek::class,'leadsid');
     }
 
-
+    public function brands()
+    {
+        return $this->hasOne(Brands::class, 'id', 'brand');
+    }
 
 }

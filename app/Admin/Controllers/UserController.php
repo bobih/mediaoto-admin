@@ -90,7 +90,7 @@ class UserController extends AdminController
     {
         $show = new Show(User::findOrFail($id));
 
-        // $show->field('id', __('Id'));
+        $show->field('id', __('Id'));
 
 
         $show->field("image","")->image($base_url = '', $width = 200, $height = 200);
@@ -100,15 +100,18 @@ class UserController extends AdminController
         $show->field('phone', __('Phone'));
         $show->field('position.name', __('Posisi'));
         $show->field('quota', __('Quota'));
+        $show->field('paket.name', __('Paket'));
         $show->field('alamat', __('Alamat'));
         $show->field('province.name', __('Provinsi'));
         $show->field('city.name', __('Kota'))->as(function ($city) {
             return ucwords(strtolower($city));
         });
+        // $show->field('brand', __('Brand'));
         $show->field('brands.brand', __('Brand'));
         $show->field('created_at', __('Created at'));
 
 
+        /*
         $show->listposition('Staff Info', function ($listUser) {
             $listUser->setResource('/admin/list-positions');
             $listUser->column('user.nama', __('Nama'));
@@ -125,13 +128,13 @@ class UserController extends AdminController
             $listUser->disableCreateButton();
 
         });
-
+        */
         $show->prospek('Prospek information', function ($prospek) {
             $prospek->setResource('/admin/prospeks');
             $prospek->column('lead.name', __('Nama'));
             $prospek->column('lead.model', __('Model'));
             $prospek->column('lead.variant', __('Variant'));
-            $prospek->note();
+            $prospek->note()->sortable();
 
             $prospek->actions(function ($actions) {
                 $actions->disableDelete();
@@ -174,7 +177,7 @@ class UserController extends AdminController
         $form->text('phone', __('Phone'));
         $form->select('position_id', __('Posisi'))->options(Position::all()->pluck('name', 'id'))->required();
         $form->text('quota', __('Quota'))->default(100)->required();
-        $form->select('brand_id', __('Brand'))->options(Brands::all()->pluck('brand', 'id'))->required();
+        $form->select('brand', __('Brand'))->options(Brands::all()->pluck('brand', 'id'))->required();
         $form->textarea('alamat', __('Alamat'));
         $form->image('image', __('Avatar'));
         $form->image('ktp', __('KTP'));

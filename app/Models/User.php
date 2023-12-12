@@ -47,7 +47,7 @@ class User extends Authenticatable
 
     public function brands()
     {
-        return $this->hasOne(Brands::class, 'id', 'brand_id');
+        return $this->hasOne(Brands::class, 'id', 'brand');
     }
 
     public function prospek()
@@ -59,6 +59,19 @@ class User extends Authenticatable
     public function city()
     {
         return $this->hasOne(City::class, 'id', 'city_id');
+    }
+
+
+    /*
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class, 'invoiceid', 'acctype');
+    }
+    */
+
+    public function paket()
+    {
+        return $this->hasOne(ListPaket::class, 'paket_id', 'acctype');
     }
 
     public function position()
